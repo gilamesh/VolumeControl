@@ -25,6 +25,7 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
     private static final String TAG = SetVolumeActivity.class.getSimpleName(); 
     private static final String VOL_CTRL_SERVICE = VolumeControlService.class.getName();
     
+    public static final String TAG_EXT = TAG;
     public static final String HEADSET_VOL = "HeadSet_Volume";
     public static final String SPEAKER_VOL = "Speaker_Volume";
     public static final String IS_SET_ALL_STREAM = "Is_Set_Ringer";
@@ -121,7 +122,7 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
         Log.d(TAG, "onStop");
         
         SharedPreferences.Editor pref_ed = 
-                getPreferences(Context.MODE_PRIVATE).edit();;
+                getSharedPreferences(TAG, Context.MODE_PRIVATE).edit();
                 
         pref_ed.putBoolean(IS_SET_ALL_STREAM, m_IsSetAllStream);
         pref_ed.putInt(HEADSET_VOL, m_HeadSetVol);
@@ -169,7 +170,7 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
         }
         else
         {
-            SharedPreferences pref = getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences pref = getSharedPreferences(TAG, Context.MODE_PRIVATE);
             m_IsSetAllStream = pref.getBoolean(IS_SET_ALL_STREAM, false);
             m_HeadSetVol = pref.getInt(HEADSET_VOL, m_HeadSetVol);
             m_SpeakerVol = pref.getInt(SPEAKER_VOL, m_SpeakerVol);
@@ -236,6 +237,7 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
         }
         else
         {
+            Log.d(TAG, "stopping volvum service from actiivty");
             Intent intent = new Intent(this, VolumeControlService.class);
             stopService(intent);
         }
