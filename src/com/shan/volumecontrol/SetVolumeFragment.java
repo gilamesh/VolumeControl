@@ -1,14 +1,18 @@
-package com.example.volumecontrol;
+package com.shan.volumecontrol;
+
+import com.shan.volumecontrol.R;
 
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,9 +24,12 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
 import android.widget.TextView;
 
-public class SetVolumeActivity extends Activity implements OnSeekBarChangeListener, OnClickListener
+public class SetVolumeFragment 
+extends     Fragment 
+implements  OnSeekBarChangeListener, 
+            OnClickListener
 {
-    private static final String TAG = SetVolumeActivity.class.getSimpleName(); 
+    private static final String TAG = SetVolumeFragment.class.getSimpleName(); 
     private static final String VOL_CTRL_SERVICE = VolumeControlService.class.getName();
     
     public static final String TAG_EXT = TAG;
@@ -34,47 +41,117 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
     private Switch  m_Switch;
     private int     m_HeadSetVol, m_SpeakerVol;
     private boolean m_IsOn; 
-    private boolean m_IsSetAllStream;
+    private boolean m_IsSetAllStream; 
     private int     m_MenuTextId;
-
+    private Activity m_AttachActivity = null;
+    private VolumeManager m_VolMgr = null;
+    
     
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onAttach(Activity activity)
+    {
+        Log.d(TAG, "onAttach");
+        m_AttachActivity = activity;
+        m_VolMgr = new VolumeManager(activity);
+        
+        super.onAttach(activity);
+    }
+
+    
+
+    @Override
+    public void onCreate(Bundle bundle)
     {
         Log.d(TAG, "onCreate");
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_volume);
+        restoreInstance(getActivity(), bundle);
+        // workaround for menu text - opPrepareOptionMenu is called first 
+        // before onActivityCreated(), hence we need to set the menu id here
+        // first
+        m_MenuTextId = (m_IsSetAllStream) 
+                        ? 
+                        R.string.menu_set_all_stream : R.string.menu_set_media_stream;
+        setHasOptionsMenu(true);
+        super. onCreate(bundle);
+    }
 
-        restoreInstance(savedInstanceState); 
+
+    @Override
+    public View onCreateView
+    (
+        LayoutInflater  inflater, 
+        ViewGroup       container,
+        Bundle          saved_instance
+    )
+    {
+        Log.d(TAG, "onCreateView");
+        View view = 
+                inflater.inflate(R.layout.activity_set_volume, container, false);
         
-        m_Switch        = (Switch)findViewById(R.id.switch_on);
-        m_HeadSetSeek   = (SeekBar)findViewById(R.id.headset_control);
-        m_SpeakerSeek   = (SeekBar)findViewById(R.id.speaker_control);
+        m_Switch        = (Switch)view.findViewById(R.id.switch_on);
+        m_HeadSetSeek   = (SeekBar)view.findViewById(R.id.headset_control);
+        m_SpeakerSeek   = (SeekBar)view.findViewById(R.id.speaker_control);
                        
         m_HeadSetSeek.setOnSeekBarChangeListener(this);
         m_SpeakerSeek.setOnSeekBarChangeListener(this);
         m_Switch.setOnClickListener(this);
               
-        
-        AudioManager audio_mgr = 
-                (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-        
-        int max_vol = audio_mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC); 
+        return view;
+    }
+
+    
+    @Override
+    public void onActivityCreated(Bundle bundle)
+    {
+        Log.d(TAG, "onActivityCreated");
+        int max_vol = m_VolMgr.getMaxStreamVol(); 
         
         m_HeadSetSeek.setMax(max_vol);
         m_HeadSetSeek.setProgress(m_HeadSetVol);
         m_SpeakerSeek.setMax(max_vol);
         m_SpeakerSeek.setProgress(m_SpeakerVol);
-        
-    }    
+           
+        super.onActivityCreated(bundle);
+    }
+      
     
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public void onStart()
     {
-        Log.d(TAG, "onreateMenuOption");
-        MenuInflater menu_inflater = getMenuInflater();
+        Log.d(TAG, "onStart");
+        
+        // activity may have bben nulled on onStop() call
+        if (null == m_AttachActivity)
+            m_AttachActivity = getActivity();
+        
+        setVolumeControlService(isServiceRunning());
+        setStreamControl(m_IsSetAllStream);
+        
+        super.onStart();
+    }
+
+        
+    @Override
+    public void onStop()
+    {
+        Log.d(TAG, "onStop");
+        
+        SharedPreferences.Editor pref_ed = 
+                this.getActivity().getSharedPreferences(TAG, Context.MODE_PRIVATE).edit();
+                
+        pref_ed.putBoolean(IS_SET_ALL_STREAM, m_IsSetAllStream);
+        pref_ed.putInt(HEADSET_VOL, m_HeadSetVol);
+        pref_ed.putInt(SPEAKER_VOL, m_SpeakerVol);
+        pref_ed.commit();
+
+        m_AttachActivity = null;
+        
+        super.onStop();
+    }
+
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menu_inflater)
+    {
         menu_inflater.inflate(R.menu.activity_set_volume, menu);
-        return true;
     }
 
     @Override
@@ -85,63 +162,26 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
         case R.id.menu_set_ringer:
             //set the opposite boolean value as we want the mew value 
             // after the press, not before it
-            setStreamControl(!item.isChecked());            
+            setStreamControl(!item.isChecked());
             return true;
         default:
             return super.onOptionsItemSelected(item);
         }
     }
-       
     
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu)
+    public void onPrepareOptionsMenu(Menu menu)
     {
         Log.d(TAG, "onPrepareOptionMenu");
         
         MenuItem item =  menu.findItem(R.id.menu_set_ringer); 
         item.setTitle(m_MenuTextId);
         item.setChecked(m_IsSetAllStream);
-        
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    @Override
-    protected void onStart()
-    {
-        Log.d(TAG, "onStart");
-        setVolumeControlService(isServiceRunning());
-        setStreamControl(m_IsSetAllStream);
-        
-        super.onStart();
-    }
-
-        
-    @Override
-    protected void onStop()
-    {
-        Log.d(TAG, "onStop");
-        
-        SharedPreferences.Editor pref_ed = 
-                getSharedPreferences(TAG, Context.MODE_PRIVATE).edit();
-                
-        pref_ed.putBoolean(IS_SET_ALL_STREAM, m_IsSetAllStream);
-        pref_ed.putInt(HEADSET_VOL, m_HeadSetVol);
-        pref_ed.putInt(SPEAKER_VOL, m_SpeakerVol);
-        pref_ed.commit();
-
-        super.onStop();
-    }
-
-    
-    protected void onDestroy()
-    {
-        Log.d(TAG, "onDestroy");
-        super.onDestroy();
     }
     
     
     @Override
-    protected void onSaveInstanceState(Bundle out_state)
+    public void onSaveInstanceState(Bundle out_state)
     {
         Log.d(TAG, "Saving instance");
         out_state.putInt(HEADSET_VOL, m_HeadSetVol);
@@ -150,10 +190,10 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
         super.onSaveInstanceState(out_state);
     }
 
-    private void restoreInstance(Bundle bundle)
+    private void restoreInstance(Activity activity, Bundle bundle)
     {
         AudioManager audio_mgr = 
-                (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                (AudioManager)activity.getSystemService(Context.AUDIO_SERVICE);
         
         int default_music_vol = 
                 audio_mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
@@ -170,25 +210,20 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
         }
         else
         {
-            SharedPreferences pref = getSharedPreferences(TAG, Context.MODE_PRIVATE);
+            SharedPreferences pref = activity.getSharedPreferences(TAG, Context.MODE_PRIVATE);
             m_IsSetAllStream = pref.getBoolean(IS_SET_ALL_STREAM, false);
             m_HeadSetVol = pref.getInt(HEADSET_VOL, m_HeadSetVol);
             m_SpeakerVol = pref.getInt(SPEAKER_VOL, m_SpeakerVol);
         }
-    
-    
-    
-    
-    
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress,
-            boolean fromUser)
+    public void onProgressChanged(SeekBar seek_bar, int progress,
+            boolean from_user)
     {
-        if (fromUser)
+        if (from_user)
         {
-            switch (seekBar.getId())
+            switch (seek_bar.getId())
             {
             case R.id.headset_control:
                 m_HeadSetVol = progress;
@@ -215,7 +250,7 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
     private boolean isServiceRunning()
     {
         ActivityManager mgr = 
-                (ActivityManager)getSystemService(ACTIVITY_SERVICE);
+                (ActivityManager)m_AttachActivity.getSystemService(Context.ACTIVITY_SERVICE);
                
         for (RunningServiceInfo service : mgr.getRunningServices(Integer.MAX_VALUE))
         {
@@ -229,7 +264,7 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
     {
         m_IsOn = is_on;
         m_Switch.setChecked(m_IsOn);
-        setActivityOnOff(m_IsOn);
+        setControlOnOff(m_IsOn);
         
         if (m_IsOn)
         {
@@ -238,15 +273,15 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
         else
         {
             Log.d(TAG, "stopping volvum service from actiivty");
-            Intent intent = new Intent(this, VolumeControlService.class);
-            stopService(intent);
+            Intent intent = new Intent(m_AttachActivity, VolumeControlService.class);
+            m_AttachActivity.stopService(intent);
         }
     }
     
-    private void setActivityOnOff(boolean is_on)
+    private void setControlOnOff(boolean is_on)
     {
         // This MUST be a view group
-        ViewGroup vg = (ViewGroup)findViewById(R.id.activity_layout);
+        ViewGroup vg = (ViewGroup)getView().findViewById(R.id.activity_layout);
         vg.setEnabled(is_on);
         for (int i = 0; i < vg.getChildCount(); ++i)
         {
@@ -259,8 +294,8 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
         // if the user changed the status, update the menu title to 
         // reflect the current status
         
-        TextView all_text = (TextView)findViewById(R.id.word_all);
-        TextView media_text = (TextView)findViewById(R.id.word_media);
+        TextView all_text = (TextView)getView().findViewById(R.id.word_all);
+        TextView media_text = (TextView)getView().findViewById(R.id.word_media);
         
         m_IsSetAllStream = is_all_stream;
         Log.d(TAG, "IsEtAllStream is" + Boolean.toString(m_IsSetAllStream));
@@ -276,19 +311,20 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
             media_text.setTextColor(getResources().getColor((R.color.text_selected)));
             m_MenuTextId = R.string.menu_set_media_stream;
         }           
-        invalidateOptionsMenu();
+        m_AttachActivity.invalidateOptionsMenu();
 
         
     }
     
     private void updateVolumes()
     {
-       Intent intent = new Intent(this, VolumeControlService.class);
+        Intent intent = 
+                new Intent(m_AttachActivity, VolumeControlService.class);
         
         intent.putExtra(HEADSET_VOL, m_HeadSetVol);
         intent.putExtra(SPEAKER_VOL, m_SpeakerVol);
         intent.putExtra(IS_SET_ALL_STREAM, m_IsSetAllStream);
-        startService(intent);
+        m_AttachActivity.startService(intent);
          
     }
     
@@ -297,6 +333,6 @@ public class SetVolumeActivity extends Activity implements OnSeekBarChangeListen
     public void onClick(View v)
     {
         if (v.getId() == R.id.switch_on)
-            setVolumeControlService(m_Switch.isChecked());        
+            setVolumeControlService(m_Switch.isChecked());
     }
- }
+}

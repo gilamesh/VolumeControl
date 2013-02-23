@@ -1,5 +1,5 @@
-package com.example.volumecontrol;
-import com.example.volumecontrol.SetVolumeActivity;
+package com.shan.volumecontrol;
+import com.shan.volumecontrol.SetVolumeFragment;
 
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -21,6 +21,7 @@ public class VolumeControlService extends Service
     private int           m_CurrHeadSetVol = 5;
     private int           m_CurrSpeakerVol = 5;
     private boolean       m_IsSetAllStream = false; 
+    private VolumeManager m_VolMgr;
     private static final int[] m_AllOtherStream = 
                                     {
                                         AudioManager.STREAM_ALARM, 
@@ -38,33 +39,33 @@ public class VolumeControlService extends Service
         {
         m_CurrHeadSetVol = intent.getIntExtra
                             (
-                                SetVolumeActivity.HEADSET_VOL, 
+                                SetVolumeFragment.HEADSET_VOL, 
                                 m_CurrHeadSetVol
                             );
 
         m_CurrSpeakerVol = intent.getIntExtra
                             (
-                                SetVolumeActivity.SPEAKER_VOL, 
+                                SetVolumeFragment.SPEAKER_VOL, 
                                 m_CurrSpeakerVol
                             );
         
         m_IsSetAllStream = intent.getBooleanExtra
                         (
-                            SetVolumeActivity.IS_SET_ALL_STREAM, 
+                            SetVolumeFragment.IS_SET_ALL_STREAM, 
                             m_IsSetAllStream
                         );
         }
         else
         {
             Context c = getApplicationContext();
-            SharedPreferences pref = getSharedPreferences(SetVolumeActivity.TAG_EXT, MODE_PRIVATE);
+            SharedPreferences pref = getSharedPreferences(SetVolumeFragment.TAG_EXT, MODE_PRIVATE);
                        
             if (null != pref)
             {                
                 //Log.d(TAG, "searching pref now.....");
-                m_IsSetAllStream = pref.getBoolean(SetVolumeActivity.IS_SET_ALL_STREAM, m_IsSetAllStream);
-                m_CurrHeadSetVol = pref.getInt(SetVolumeActivity.HEADSET_VOL, m_CurrHeadSetVol);
-                m_CurrSpeakerVol = pref.getInt(SetVolumeActivity.SPEAKER_VOL, m_CurrSpeakerVol);
+                m_IsSetAllStream = pref.getBoolean(SetVolumeFragment.IS_SET_ALL_STREAM, m_IsSetAllStream);
+                m_CurrHeadSetVol = pref.getInt(SetVolumeFragment.HEADSET_VOL, m_CurrHeadSetVol);
+                m_CurrSpeakerVol = pref.getInt(SetVolumeFragment.SPEAKER_VOL, m_CurrSpeakerVol);
             }
             else
             {
@@ -95,11 +96,7 @@ public class VolumeControlService extends Service
     public void onCreate()
     {
         //Log.d(TAG, "onCreate");
-        //Set default values
-        m_CurrHeadSetVol = 1;//m_AudioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
-        m_CurrSpeakerVol = 1;//m_CurrHeadSetVol;
-        m_IsSetAllStream = false;
-        
+        m_VolMgr = new VolumeManager(getApplicationContext());
         IntentFilter receive_filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         m_VolReceiver = new VolumeControlReceiver();
         registerReceiver(m_VolReceiver, receive_filter);
@@ -133,21 +130,31 @@ public class VolumeControlService extends Service
         AudioManager audio_mgr = 
                 (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
-        int vol_to_set;
+        int vol_to_set = (is_headset_on) 
+                         ? 
+                         m_CurrHeadSetVol : m_CurrSpeakerVol;
         
-        if (is_headset_on)
-            vol_to_set = m_CurrHeadSetVol; 
-        else 
-            vol_to_set = m_CurrSpeakerVol;
+        m_VolMgr.setCurrentStreamVol(vol_to_set);
         
         // we will always set the music stream; the other streams 
         // will be set depending on the user's option
-        audio_mgr.setStreamVolume(AudioManager.STREAM_MUSIC, vol_to_set, 0);
+        audio_mgr.setStreamVolume
+        (
+            AudioManager.STREAM_MUSIC, 
+            m_VolMgr.getCurrVol(AudioManager.STREAM_MUSIC), 
+            0
+        );
+        
         if (m_IsSetAllStream)
         {
             for (int stream_id : m_AllOtherStream)
             {
-                audio_mgr.setStreamVolume(stream_id, vol_to_set, 0);
+                audio_mgr.setStreamVolume
+                (
+                   stream_id, 
+                   m_VolMgr.getCurrVol(stream_id),
+                   0
+               );
             }
         }
     }

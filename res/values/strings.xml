@@ -2,12 +2,18 @@
 <resources>
 
     <string name="app_name">VolumeControl</string>
+    <string name="vol_ctrl">Volume Control</string>
+    <string name="vol_view">View Volume</string>
     <string name="headset_text">HEADSET</string>
     <string name="speaker_text">SPEAKER</string>
     <string name="menu_set_all_stream">ALL STREAMS</string>
     <string name="menu_set_media_stream">MEDIA STREAM</string>
     <string name="media_text">MEDIA</string>
     <string name="all_text">ALL</string>
+    <string name="vol_view_media">MEDIA</string>
+    <string name="vol_view_ringer">RINGER</string>
+    <string name="vol_view_alarm">ALARM</string>
+    <string name="vol_view_altert">ALERT</string>
     <color name="text_unselected">#F0EEEE</color>
     <color name="text_selected">#000000</color>
 </resources>
