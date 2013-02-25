@@ -19,7 +19,7 @@ implements ActionBar.OnNavigationListener
 {
     private static final String     TAG = FrameLayoutActivity.class.getSimpleName();
     private static final String     CURR_FRAGMENT_INDEX = "selected_navigation_item";
-    private static final String[]   m_TitleArr = {"Volume Control", "View Volume"};
+    private static final String[]   m_TitleArr = {"Control Volume", "View Volume"};
     private int                     m_CurrFragmentIndex;
 
     
@@ -50,8 +50,7 @@ implements ActionBar.OnNavigationListener
     @Override
     public boolean onPrepareOptionsMenu(Menu menu)
     {
-        // the menu is only show on volume control page
-        return (m_CurrFragmentIndex == 0) ? true : false; 
+        return true;
     }
 
     

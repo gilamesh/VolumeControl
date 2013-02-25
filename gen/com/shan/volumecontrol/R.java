@@ -16,21 +16,25 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int navigation_refresh=0x7f020001;
     }
     public static final class id {
         public static final int activity_layout=0x7f080001;
+        public static final int alarm=0x7f08000e;
+        public static final int alert=0x7f08000d;
         public static final int control_vol_framework=0x7f080009;
         public static final int headset_control=0x7f080003;
         public static final int headset_text_view=0x7f080002;
         public static final int media=0x7f08000b;
-        public static final int menu_set_ringer=0x7f08000f;
+        public static final int menu_refresh=0x7f080012;
+        public static final int menu_set_ringer=0x7f080011;
         public static final int ringer=0x7f08000c;
         public static final int speaker_control=0x7f080005;
         public static final int speaker_text_view=0x7f080004;
         public static final int switch_on=0x7f080000;
         public static final int view_vol_layout=0x7f08000a;
-        public static final int vol_bar_media_name=0x7f08000d;
-        public static final int vol_bar_progress_bar=0x7f08000e;
+        public static final int vol_bar_media_name=0x7f08000f;
+        public static final int vol_bar_progress_bar=0x7f080010;
         public static final int word_all=0x7f080008;
         public static final int word_media=0x7f080007;
         public static final int word_part=0x7f080006;
@@ -43,6 +47,7 @@ public final class R {
     }
     public static final class menu {
         public static final int activity_set_volume=0x7f070000;
+        public static final int view_vol_menu=0x7f070001;
     }
     public static final class string {
         public static final int all_text=0x7f040008;
@@ -55,9 +60,12 @@ public final class R {
         public static final int vol_ctrl=0x7f040001;
         public static final int vol_view=0x7f040002;
         public static final int vol_view_alarm=0x7f04000b;
-        public static final int vol_view_altert=0x7f04000c;
+        public static final int vol_view_alert=0x7f04000c;
+        public static final int vol_view_altert=0x7f04000f;
         public static final int vol_view_media=0x7f040009;
         public static final int vol_view_ringer=0x7f04000a;
+        public static final int vol_view_system=0x7f04000e;
+        public static final int vol_view_voice=0x7f04000d;
     }
     public static final class style {
         /** 

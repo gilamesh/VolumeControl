@@ -26,9 +26,7 @@ public class VolumeControlService extends Service
                                     {
                                         AudioManager.STREAM_ALARM, 
                                         AudioManager.STREAM_NOTIFICATION, 
-                                        AudioManager.STREAM_RING, 
-                                        AudioManager.STREAM_SYSTEM, 
-                                        AudioManager.STREAM_VOICE_CALL
+                                        AudioManager.STREAM_RING
                                     };
     
     @SuppressWarnings("deprecation")

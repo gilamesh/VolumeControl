@@ -2,20 +2,20 @@ package com.shan.volumecontrol;
 
 import android.content.Context;
 import android.media.AudioManager;
+import android.util.Log;
 
 public class VolumeManager
 {
     private static final String TAG = VolumeManager.class.getName();
-    private int[]      m_MaxStreamVolArr = {1, 1, 1, 1, 1, 1};
-    private int[]      m_StreamVolArr = {1, 1 ,1 ,1 ,1, 1};
+    private int[]               m_MaxStreamVolArr   = {1, 1, 1, 1};
+    private int[]               m_StreamVolArr      = {1, 1 ,1 ,1};
+    private int             m_MaxStreamVol = -1;
+    
     private static final int[] m_MediaType = { 
                     AudioManager.STREAM_MUSIC, AudioManager.STREAM_RING, 
-                    AudioManager.STREAM_VOICE_CALL, AudioManager.STREAM_ALARM, 
-                    AudioManager.STREAM_NOTIFICATION, AudioManager.STREAM_SYSTEM        
+                    AudioManager.STREAM_ALARM, AudioManager.STREAM_NOTIFICATION        
                     };
-   
-    
-    private int         m_MaxStreamVol = -1;
+
     
     public VolumeManager(Context context)
     {
@@ -43,14 +43,41 @@ public class VolumeManager
     
     public void setCurrentStreamVol(int vol_level)
     {
-        float vol_percentile = (float)vol_level / m_MaxStreamVol;
+        float vol_percent = (float)vol_level / m_MaxStreamVol;
         
-        vol_percentile = (vol_percentile > 1) ? 1 : vol_percentile;
+        vol_percent = (vol_percent > 1) ? 1 : vol_percent;
 
         int len = m_MediaType.length;
         for (int i = 0; i < len; ++i)
         {
-            m_StreamVolArr[i] = (int)(vol_percentile * m_MaxStreamVolArr[i] + 0.5);
+            float   media_vol_f  = vol_percent * m_MaxStreamVolArr[i];
+            int     media_vol;
+            
+            // make the volunme "sticky" - will not reach true 0% or 100% 
+            // unless pushed.
+            if (media_vol_f < 0.005)
+            {
+                media_vol = 0;
+            }            
+            else if (media_vol_f < 0.995)
+            {
+                media_vol = 1;
+            }
+            else if 
+            (
+                media_vol_f + 1.005 > m_MaxStreamVolArr[i] 
+                && 
+                media_vol_f + 0.005 < m_MaxStreamVolArr[i]
+            )
+            {
+                media_vol = m_MaxStreamVolArr[i] - 1;
+            }
+            else
+            {
+                media_vol = (int)(media_vol_f + 0.5);
+            }           
+            
+            m_StreamVolArr[i] = media_vol;
         }
     }
     

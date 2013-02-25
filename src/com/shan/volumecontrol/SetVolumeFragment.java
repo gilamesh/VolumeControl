@@ -310,7 +310,9 @@ implements  OnSeekBarChangeListener,
             all_text.setTextColor(getResources().getColor((R.color.text_unselected)));
             media_text.setTextColor(getResources().getColor((R.color.text_selected)));
             m_MenuTextId = R.string.menu_set_media_stream;
-        }           
+        }
+        
+        updateVolumes();
         m_AttachActivity.invalidateOptionsMenu();
 
         

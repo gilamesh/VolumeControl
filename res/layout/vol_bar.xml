@@ -1,15 +1,15 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" >
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp" >
 
         <TextView
             android:id="@+id/vol_bar_media_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="10dp"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="15dp"
             android:text="Media"/>
@@ -21,6 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/vol_bar_media_name"
             android:layout_below="@id/vol_bar_media_name"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="0dp"/>
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"/>
     </RelativeLayout>

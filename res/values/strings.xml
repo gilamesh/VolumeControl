@@ -13,6 +13,10 @@
     <string name="vol_view_media">MEDIA</string>
     <string name="vol_view_ringer">RINGER</string>
     <string name="vol_view_alarm">ALARM</string>
+    <string name="vol_view_alert">NOTIFICATION</string>
+    <string name="vol_view_voice">VOICE</string>
+    <string name="vol_view_system">SYSTEM</string>
+    
     <string name="vol_view_altert">ALERT</string>
     <color name="text_unselected">#F0EEEE</color>
     <color name="text_selected">#000000</color>

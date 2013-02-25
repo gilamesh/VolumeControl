@@ -19,28 +19,30 @@
 	    android:layout_height="0dp"
 	    android:layout_weight="1"
 	     >
-	    <TextView
-	        android:id="@+id/headset_text_view"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
-	        android:layout_alignParentTop="true"
-	        android:layout_marginTop="30dp"
-	        android:text="@string/headset_text" />
-
+        <TextView
+            android:id="@+id/headset_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="30dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="15dp"
+            android:text="@string/headset_text" />
+	    
 	    <SeekBar
 	        android:id="@+id/headset_control"
 	        android:layout_width="fill_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
+	        android:layout_alignLeft="@id/headset_text_view"
 	        android:layout_below="@id/headset_text_view"
+	        android:layout_marginRight="15dp"
 	        android:layout_marginTop="20dp" />
 
 	    <TextView
 	        android:id="@+id/speaker_text_view"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
+	        android:layout_alignLeft="@id/headset_control"
 	        android:layout_below="@+id/headset_control"
 	        android:layout_marginTop="30dp"
 	        android:text="@string/speaker_text" />
@@ -49,7 +51,8 @@
 	        android:id="@+id/speaker_control"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:layout_alignParentLeft="true"
+	        android:layout_alignLeft="@id/headset_control"
+	        android:layout_alignRight="@id/headset_control"
 	        android:layout_below="@id/speaker_text_view"
 	        android:layout_marginTop="20dp" />
 
@@ -83,6 +86,7 @@
             android:layout_marginLeft="10dp"
             android:text="@string/all_text"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
 	    	    	
 	</RelativeLayout>    
     

@@ -1,17 +1,20 @@
- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="fill_parent"
-     android:layout_height="fill_parent">
-	 <LinearLayout
-	     android:id="@+id/view_vol_layout"
-	     android:layout_width="fill_parent"
-	     android:layout_height="fill_parent"
-	     android:layout_marginTop="0dp"
-	     android:orientation="vertical" >
-	     <include 
-	         layout="@layout/vol_bar"
-	         android:id="@+id/media"/>
-         <include 
-             layout="@layout/vol_bar"
-             android:id="@+id/ringer"/>    
-   	 </LinearLayout> 
- </ScrollView>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   android:id="@+id/view_vol_layout"
+   android:layout_width="fill_parent"
+   android:layout_height="fill_parent"
+   android:orientation="vertical" >
+
+    <include
+        android:id="@+id/media"
+        layout="@layout/vol_bar"/>
+   <include
+       android:id="@+id/ringer"
+       layout="@layout/vol_bar" />    
+   <include 
+       layout="@layout/vol_bar"
+       android:id="@+id/alert"/>    
+   <include 
+       layout="@layout/vol_bar"
+       android:id="@+id/alarm"/>    
+  </LinearLayout> 
+ 
