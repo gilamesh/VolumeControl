@@ -3,19 +3,16 @@ package com.shan.volumecontrol;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,6 +22,8 @@ public class ViewVolumeFragment extends Fragment
     private ProgressBar         m_MediaProgressBar, m_RingerProgressBar, 
                                 m_AlertProgressBar,m_AlarmProgressBar; 
                                 
+    private ImageView           m_RingerIcon, m_AlertIcon, m_AlarmIcon;
+    
     private VolumeManager m_VolMgr;
 
     
@@ -66,13 +65,16 @@ public class ViewVolumeFragment extends Fragment
         title.setText(R.string.vol_view_ringer);
         m_RingerProgressBar = (ProgressBar)view.findViewById(R.id.vol_bar_progress_bar);
         m_RingerProgressBar.setMax(m_VolMgr.getMaxVol(AudioManager.STREAM_RING));
-                
+        m_RingerIcon = (ImageView)view.findViewById(R.id.vol_bar_icon);
+        m_RingerIcon.setImageResource(R.drawable.vc_phone);
         //set up alert
         view = root_view.findViewById(R.id.alert);
         title = (TextView)view.findViewById(R.id.vol_bar_media_name);
         title.setText(R.string.vol_view_alert);
         m_AlertProgressBar = (ProgressBar)view.findViewById(R.id.vol_bar_progress_bar);
         m_AlertProgressBar.setMax(m_VolMgr.getMaxVol(AudioManager.STREAM_NOTIFICATION));
+        m_AlertIcon = (ImageView)view.findViewById(R.id.vol_bar_icon);
+        m_AlertIcon.setImageResource(R.drawable.vc_alert);
         
         //set up alarm
         view = root_view.findViewById(R.id.alarm);
@@ -80,6 +82,8 @@ public class ViewVolumeFragment extends Fragment
         title.setText(R.string.vol_view_alarm);
         m_AlarmProgressBar = (ProgressBar)view.findViewById(R.id.vol_bar_progress_bar);
         m_AlarmProgressBar.setMax(m_VolMgr.getMaxVol(AudioManager.STREAM_ALARM));
+        m_AlarmIcon = (ImageView)view.findViewById(R.id.vol_bar_icon);
+        m_AlarmIcon.setImageResource(R.drawable.vc_alarm);
                 
         return root_view;
     }

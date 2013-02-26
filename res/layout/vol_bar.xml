@@ -2,8 +2,8 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="10dp" >
+        android:paddingTop="2dp"
+        android:paddingBottom="6dp" >
 
         <TextView
             android:id="@+id/vol_bar_media_name"
@@ -11,16 +11,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="7dp"
+            android:textSize="14sp"
             android:text="Media"/>
+
+        <ImageView
+            android:id="@+id/vol_bar_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/vol_bar_media_name"
+            android:layout_alignLeft="@+id/vol_bar_media_name"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/vc_media" />
 
         <ProgressBar
             android:id="@+id/vol_bar_progress_bar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/vol_bar_media_name"
+            android:layout_toRightOf="@id/vol_bar_icon"
             android:layout_below="@id/vol_bar_media_name"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="16dp"/>
+
+
     </RelativeLayout>

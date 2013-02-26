@@ -10,25 +10,26 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="right"
-	    android:layout_margin="10dp"
+	    android:layout_margin="18dp"
 	    android:checked="false"
-	    android:height="20dp" />   
+	    android:height="20dp" />
+
 	<RelativeLayout
 	    android:id="@+id/activity_layout"
 	    android:layout_width="match_parent"
 	    android:layout_height="0dp"
-	    android:layout_weight="1"
-	     >
-        <TextView
-            android:id="@+id/headset_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="15dp"
-            android:text="@string/headset_text" />
-	    
+	    android:layout_weight="1" >
+
+	    <TextView
+	        android:id="@+id/headset_text_view"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentLeft="true"
+	        android:layout_alignParentTop="true"
+	        android:layout_marginLeft="15dp"
+	        android:layout_marginTop="30dp"
+	        android:text="@string/headset_text" />
+
 	    <SeekBar
 	        android:id="@+id/headset_control"
 	        android:layout_width="fill_parent"
@@ -56,39 +57,51 @@
 	        android:layout_below="@id/speaker_text_view"
 	        android:layout_marginTop="20dp" />
 
-        <TextView
-            android:id="@+id/word_part"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/speaker_control"
-            android:layout_marginTop="66dp"
-            android:gravity="center"
-            android:text="|"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-	    
 	    <TextView
-	        android:id="@+id/word_media"
+	        android:id="@+id/word_part"
+	        android:layout_width="wrap_content"
+	        android:layout_height="30dp"
+	        android:layout_below="@+id/speaker_control"
+	        android:layout_centerHorizontal="true"
+	        android:layout_marginTop="66dp"
+	        android:gravity="center"
+	        android:text=" " />
+
+	    <ImageView
+	        android:id="@+id/phone_icon"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/word_part"
 	        android:layout_alignBaseline="@id/word_part"
-	        android:layout_marginRight="10dp"
-	        android:text="@string/media_text"
-	        android:textAppearance="?android:attr/textAppearanceMedium" />
+	        android:layout_margin="3dp"
+	        android:layout_toLeftOf="@id/word_part"
+	        android:src="@drawable/vc_phone" />
 
-        <TextView
-            android:id="@+id/word_all"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/word_part"
-            android:layout_toRightOf="@id/word_part"
-            android:layout_marginLeft="10dp"
-            android:text="@string/all_text"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+	    <ImageView
+	        android:id="@+id/media_icon"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/word_part"
+	        android:layout_margin="3dp"
+	        android:layout_toLeftOf="@id/phone_icon"
+	        android:src="@drawable/vc_media" />
 
-	    	    	
-	</RelativeLayout>    
-    
+	    <ImageView
+	        android:id="@+id/alert_icon"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/word_part"
+	        android:layout_margin="3dp"
+	        android:layout_toRightOf="@id/word_part"
+	        android:src="@drawable/vc_alert" />
+
+	    <ImageView
+	        android:id="@+id/alarm_icon"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBaseline="@id/word_part"
+	        android:layout_margin="3dp"
+	        android:layout_toRightOf="@id/alert_icon"
+	        android:src="@drawable/vc_alarm" />
+	</RelativeLayout>
     
 </LinearLayout>

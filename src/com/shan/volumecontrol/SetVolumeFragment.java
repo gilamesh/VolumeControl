@@ -19,6 +19,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
@@ -37,13 +40,14 @@ implements  OnSeekBarChangeListener,
     public static final String SPEAKER_VOL = "Speaker_Volume";
     public static final String IS_SET_ALL_STREAM = "Is_Set_Ringer";
     
-    private SeekBar m_HeadSetSeek, m_SpeakerSeek;
-    private Switch  m_Switch;
-    private int     m_HeadSetVol, m_SpeakerVol;
-    private boolean m_IsOn; 
-    private boolean m_IsSetAllStream; 
-    private int     m_MenuTextId;
-    private Activity m_AttachActivity = null;
+    private SeekBar     m_HeadSetSeek, m_SpeakerSeek;
+    private Switch      m_Switch;
+    private ImageView   m_PhoneIcon, m_AlertIcon, m_AlarmIcon;
+    private int         m_HeadSetVol, m_SpeakerVol;
+    private boolean     m_IsOn; 
+    private boolean     m_IsSetAllStream; 
+    private int         m_MenuTextId;
+    private Activity    m_AttachActivity = null;
     private VolumeManager m_VolMgr = null;
     
     
@@ -94,7 +98,12 @@ implements  OnSeekBarChangeListener,
         m_HeadSetSeek.setOnSeekBarChangeListener(this);
         m_SpeakerSeek.setOnSeekBarChangeListener(this);
         m_Switch.setOnClickListener(this);
-              
+
+        m_PhoneIcon = (ImageView)view.findViewById(R.id.phone_icon);
+        m_AlarmIcon = (ImageView)view.findViewById(R.id.alarm_icon);
+        m_AlertIcon = (ImageView)view.findViewById(R.id.alert_icon);
+        
+        
         return view;
     }
 
@@ -292,23 +301,21 @@ implements  OnSeekBarChangeListener,
     private void setStreamControl(boolean is_all_stream)
     {
         // if the user changed the status, update the menu title to 
-        // reflect the current status
-        
-        TextView all_text = (TextView)getView().findViewById(R.id.word_all);
-        TextView media_text = (TextView)getView().findViewById(R.id.word_media);
-        
+        // reflect the current status        
         m_IsSetAllStream = is_all_stream;
         Log.d(TAG, "IsEtAllStream is" + Boolean.toString(m_IsSetAllStream));
         if (m_IsSetAllStream)
         {
-            all_text.setTextColor(getResources().getColor((R.color.text_selected)));
-            media_text.setTextColor(getResources().getColor((R.color.text_unselected)));
+            m_PhoneIcon.setImageResource(R.drawable.vc_phone);
+            m_AlarmIcon.setImageResource(R.drawable.vc_alarm);
+            m_AlertIcon.setImageResource(R.drawable.vc_alert);            
             m_MenuTextId = R.string.menu_set_all_stream;
         }
         else
         {
-            all_text.setTextColor(getResources().getColor((R.color.text_unselected)));
-            media_text.setTextColor(getResources().getColor((R.color.text_selected)));
+            m_PhoneIcon.setImageResource(R.drawable.vc_phone_off);
+            m_AlarmIcon.setImageResource(R.drawable.vc_alarm_off);
+            m_AlertIcon.setImageResource(R.drawable.vc_alert_off);            
             m_MenuTextId = R.string.menu_set_media_stream;
         }
         
