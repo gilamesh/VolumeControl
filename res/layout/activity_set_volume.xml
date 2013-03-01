@@ -57,51 +57,59 @@
 	        android:layout_below="@id/speaker_text_view"
 	        android:layout_marginTop="20dp" />
 
-	    <TextView
-	        android:id="@+id/word_part"
-	        android:layout_width="wrap_content"
-	        android:layout_height="30dp"
+	    <View
+	        android:id="@+id/center"
+	        android:layout_width="1dp"
+	        android:layout_height="1dp"
 	        android:layout_below="@+id/speaker_control"
 	        android:layout_centerHorizontal="true"
-	        android:layout_marginTop="66dp"
-	        android:gravity="center"
-	        android:text=" " />
-
+	        android:layout_marginTop="30dp"
+	        android:gravity="center"/>
+        <TextView 
+            android:id="@+id/word_part"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/center"
+            android:layout_marginBottom="10dp"
+            android:text="@string/vol_ctrl_stream_title"            
+            />
 	    <ImageView
 	        android:id="@+id/phone_icon"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@id/word_part"
+	        android:layout_below="@id/word_part"
 	        android:layout_margin="3dp"
-	        android:layout_toLeftOf="@id/word_part"
+	        android:layout_toLeftOf="@id/center"
 	        android:src="@drawable/vc_phone" />
 
 	    <ImageView
 	        android:id="@+id/media_icon"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@id/word_part"
 	        android:layout_margin="3dp"
 	        android:layout_toLeftOf="@id/phone_icon"
+	        android:layout_alignBottom="@id/phone_icon"
 	        android:src="@drawable/vc_media" />
 
 	    <ImageView
 	        android:id="@+id/alert_icon"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@id/word_part"
+	        android:layout_alignBottom="@id/phone_icon"
 	        android:layout_margin="3dp"
-	        android:layout_toRightOf="@id/word_part"
+	        android:layout_toRightOf="@id/center"
 	        android:src="@drawable/vc_alert" />
 
 	    <ImageView
 	        android:id="@+id/alarm_icon"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignBaseline="@id/word_part"
+	        android:layout_alignBottom="@id/phone_icon"
 	        android:layout_margin="3dp"
 	        android:layout_toRightOf="@id/alert_icon"
 	        android:src="@drawable/vc_alarm" />
+
 	</RelativeLayout>
     
 </LinearLayout>

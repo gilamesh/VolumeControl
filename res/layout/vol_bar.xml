@@ -21,9 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/vol_bar_media_name"
             android:layout_alignLeft="@+id/vol_bar_media_name"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/vc_media" />
-
+            android:layout_marginRight="10dp"/>
         <ProgressBar
             android:id="@+id/vol_bar_progress_bar"
             style="?android:attr/progressBarStyleHorizontal"

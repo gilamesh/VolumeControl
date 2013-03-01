@@ -1,4 +1,4 @@
-package com.shan.volumecontrol;
+ package com.shan.volumecontrol;
 import com.shan.volumecontrol.SetVolumeFragment;
 
 import android.app.Service;
@@ -28,6 +28,9 @@ public class VolumeControlService extends Service
                                         AudioManager.STREAM_NOTIFICATION, 
                                         AudioManager.STREAM_RING
                                     };
+    
+    
+    
     
     @SuppressWarnings("deprecation")
     @Override
@@ -78,6 +81,7 @@ public class VolumeControlService extends Service
         
         triggerVolumeChange(audio_mgr.isWiredHeadsetOn());
         return Service.START_STICKY;
+        
     }
 
     
@@ -93,7 +97,7 @@ public class VolumeControlService extends Service
     @Override
     public void onCreate()
     {
-        //Log.d(TAG, "onCreate");
+        Log.d(TAG, "Service started...");
         m_VolMgr = new VolumeManager(getApplicationContext());
         IntentFilter receive_filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         m_VolReceiver = new VolumeControlReceiver();
@@ -114,7 +118,8 @@ public class VolumeControlService extends Service
     {
         if (null != m_VolReceiver)
             unregisterReceiver(m_VolReceiver);
-        //Log.d(TAG, "ServiceonDestroy");
+        Log.d(TAG, "ServiceonDestroy");
+        super.onDestroy();
     }
     
 
