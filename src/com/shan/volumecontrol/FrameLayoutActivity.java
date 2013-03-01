@@ -125,7 +125,6 @@ implements ActionBar.OnNavigationListener
 
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             transaction.replace(R.id.control_vol_framework, fragment);
-            transaction.addToBackStack(null);
             transaction.commit();
             m_CurrFragmentIndex = pos;
             return true;

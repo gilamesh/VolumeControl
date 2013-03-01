@@ -21,7 +21,7 @@ public class VolumeControlService extends Service
     private int           m_CurrHeadSetVol = 5;
     private int           m_CurrSpeakerVol = 5;
     private boolean       m_IsSetAllStream = false; 
-    private VolumeManager m_VolMgr;
+    private VolumeManager m_VolMgr; 
     private static final int[] m_AllOtherStream = 
                                     {
                                         AudioManager.STREAM_ALARM, 
