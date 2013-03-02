@@ -2,7 +2,6 @@ package com.shan.volumecontrol;
 
 import android.content.Context;
 import android.media.AudioManager;
-import android.util.Log;
 
 public class VolumeManager
 {

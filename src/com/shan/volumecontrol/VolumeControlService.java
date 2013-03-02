@@ -9,8 +9,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
-import android.provider.Settings.System;
 import android.util.Log;
 
 
@@ -58,8 +56,8 @@ public class VolumeControlService extends Service
         }
         else
         {
-            Context c = getApplicationContext();
-            SharedPreferences pref = getSharedPreferences(SetVolumeFragment.TAG_EXT, MODE_PRIVATE);
+            SharedPreferences pref = 
+                    getSharedPreferences(SetVolumeFragment.TAG_EXT, MODE_PRIVATE);
                        
             if (null != pref)
             {                
@@ -171,7 +169,7 @@ public class VolumeControlService extends Service
          * As specified in http://developer.android.com/reference/
          * android/content/Intent.html#ACTION_HEADSET_PLUG
          */
-        private static final int HEADSET_UNPLUG = 0; 
+        //private static final int HEADSET_UNPLUG = 0; 
         private static final int HEADSET_PLUG   = 1;
         
         

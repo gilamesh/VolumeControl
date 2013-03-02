@@ -74,23 +74,6 @@ implements ActionBar.OnNavigationListener
         );
     }    
 
-    
-    
-    @Override
-    protected void onDestroy()
-    {
-        Log.d(TAG, "onDestroy");
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause()
-    {
-        Log.d(TAG, "onPause");
-        finish();
-        super.onPause();
-    }
-
     @Override
     protected void onStart()
     {
