@@ -74,12 +74,12 @@ public class VolumeControlService extends Service
             }
         }
         
-        //Log.d(TAG, "ServiceonStartCommand id");
 
         AudioManager audio_mgr = 
                 (AudioManager)getSystemService(Context.AUDIO_SERVICE);        
         
         triggerVolumeChange(audio_mgr.isWiredHeadsetOn());
+
         return Service.START_STICKY;
         
     }

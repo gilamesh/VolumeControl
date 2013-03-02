@@ -51,12 +51,11 @@ implements  OnSeekBarChangeListener,
     private boolean     m_IsSetAllStream; 
     private int         m_MenuTextId;
     private VolumeManager m_VolMgr = null;
-    
+    private AudioManager m_AudioMgr;
 
     @Override
     public void onCreate(Bundle bundle)
     {
-        restoreInstance(getActivity(), bundle);
         // workaround for menu text - opPrepareOptionMenu is called first 
         // before onActivityCreated(), hence we need to set the menu id here
         // first
@@ -66,6 +65,12 @@ implements  OnSeekBarChangeListener,
                         : 
                         R.string.menu_set_media_stream;
         setHasOptionsMenu(true);
+        
+        m_AudioMgr = (AudioManager)getActivity().
+                    getSystemService(Context.AUDIO_SERVICE);
+
+        restoreInstance(getActivity(), bundle);
+        
         super. onCreate(bundle);
     }
 
@@ -123,7 +128,6 @@ implements  OnSeekBarChangeListener,
     public void onStart()
     {
         Log.d(TAG, "onStart");
-
         setServiceOnOff(isServiceRunning());
         super.onStart();
     }
@@ -191,11 +195,8 @@ implements  OnSeekBarChangeListener,
 
     private void restoreInstance(Activity activity, Bundle bundle)
     {
-        AudioManager audio_mgr = 
-                (AudioManager)activity.getSystemService(Context.AUDIO_SERVICE);
-        
         int default_music_vol = 
-                audio_mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+                m_AudioMgr.getStreamVolume(AudioManager.STREAM_MUSIC);
         
         m_IsSetAllStream = false;
         m_HeadSetVol = default_music_vol;
@@ -216,6 +217,10 @@ implements  OnSeekBarChangeListener,
         }
     }
 
+    
+    
+    
+    
     @Override
     public void onProgressChanged(SeekBar seek_bar, int progress,
             boolean from_user)
@@ -353,7 +358,6 @@ implements  OnSeekBarChangeListener,
         
         getActivity().startService(intent);
     }
-    
     
     @Override
     public void onClick(View v)

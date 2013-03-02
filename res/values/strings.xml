@@ -16,7 +16,7 @@
     <string name="vol_view_alert">NOTIFICATION</string>
     <string name="vol_view_voice">VOICE</string>
     <string name="vol_view_system">SYSTEM</string>
-    <string name="vol_ctrl_stream_title">AUDIO STREAMS AFFECTED</string>
+    <string name="vol_ctrl_stream_title">SELECTED AUDIO STREAMS</string>
     
     <color name="holo_light_blue">#FF33B5E5</color>
     <color name="light_grey">#DDD</color>

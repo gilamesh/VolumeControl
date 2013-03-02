@@ -3,15 +3,12 @@ package com.shan.volumecontrol;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 public class FrameLayoutActivity extends Activity 
@@ -21,7 +18,6 @@ implements ActionBar.OnNavigationListener
     private static final String     CURR_FRAGMENT_INDEX = "selected_navigation_item";
     private static final String[]   m_TitleArr = {"Control Volume", "View Volume"};
     private int                     m_CurrFragmentIndex;
-
     
     @Override
     protected void onCreate(Bundle save_instance_state)
@@ -81,6 +77,21 @@ implements ActionBar.OnNavigationListener
     
     
     @Override
+    protected void onDestroy()
+    {
+        Log.d(TAG, "onDestroy");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        Log.d(TAG, "onPause");
+        finish();
+        super.onPause();
+    }
+
+    @Override
     protected void onStart()
     {
         Log.d(TAG, "onStart");        
@@ -95,7 +106,7 @@ implements ActionBar.OnNavigationListener
     @Override
     protected void onStop()
     {
-        Log.d(TAG, "onStop");        
+        Log.d(TAG, "onStop");
         SharedPreferences.Editor pref_ed = 
                 getSharedPreferences(TAG, Context.MODE_PRIVATE).edit();
                 
@@ -105,6 +116,10 @@ implements ActionBar.OnNavigationListener
         super.onStop();
     }
 
+    
+    
+    
+    
     @Override
     public boolean onNavigationItemSelected(int pos, long id)
     {
@@ -112,10 +127,10 @@ implements ActionBar.OnNavigationListener
         {
             Fragment fragment = null;
             
-            // VolumeControl view 
+            // VolumeControl view.
             if (0 == pos)
             {
-                fragment = new SetVolumeFragment();
+                fragment    = new SetVolumeFragment();
             }
             // View Volume
             else
@@ -127,6 +142,7 @@ implements ActionBar.OnNavigationListener
             transaction.replace(R.id.control_vol_framework, fragment);
             transaction.commit();
             m_CurrFragmentIndex = pos;
+            
             return true;
         }
         else
