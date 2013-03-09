@@ -11,12 +11,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 
-public class FrameLayoutActivity extends Activity 
+public class VolumeControlActivity extends Activity 
 implements ActionBar.OnNavigationListener
 {
-    private static final String     TAG = FrameLayoutActivity.class.getSimpleName();
+    private static final String     TAG = VolumeControlActivity.class.getSimpleName();
     private static final String     CURR_FRAGMENT_INDEX = "selected_navigation_item";
-    private static final String[]   m_TitleArr = {"Control Volume", "View Volume"};
+    private static final int        CTRL_VOL_PAGE = 0;
+    private static final int        VIEW_VOL_PAGE = 1;
     private int                     m_CurrFragmentIndex;
     
     @Override
@@ -24,7 +25,14 @@ implements ActionBar.OnNavigationListener
     {
         Log.d(TAG, "onCreate");        
         super.onCreate(save_instance_state);
-        setContentView(R.layout.control_volume_framework);
+        setContentView(R.layout.control_volume_activity);
+        
+        
+        String[] title_arr = 
+                        {
+                            getString(R.string.vol_ctrl), 
+                            getString(R.string.vol_view)
+                        }; 
         
         // Set up action bar to show a list of two fragments
         final ActionBar action_bar = getActionBar();
@@ -37,7 +45,7 @@ implements ActionBar.OnNavigationListener
                 action_bar.getThemedContext(), 
                 android.R.layout.simple_list_item_1, 
                 android.R.id.text1, 
-                m_TitleArr
+                title_arr
             ), 
             this
         );       
@@ -99,39 +107,30 @@ implements ActionBar.OnNavigationListener
         super.onStop();
     }
 
-    
-    
-    
-    
     @Override
     public boolean onNavigationItemSelected(int pos, long id)
     {
-        if (0 == pos || 1 == pos)
+        Fragment f = null;
+        
+        switch (pos)
         {
-            Fragment fragment = null;
-            
-            // VolumeControl view.
-            if (0 == pos)
-            {
-                fragment    = new SetVolumeFragment();
-            }
-            // View Volume
-            else
-            {
-                fragment = new ViewVolumeFragment();
-            }
-
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.control_vol_framework, fragment);
-            transaction.commit();
-            m_CurrFragmentIndex = pos;
-            
-            return true;
-        }
-        else
-        {
-            throw new IndexOutOfBoundsException("NavigationBar does not have index " + Integer.toString(pos));
-        }
+        case CTRL_VOL_PAGE:
+            f = new SetVolumeFragment();
+            break;
+        case VIEW_VOL_PAGE:
+            f = new ViewVolumeFragment();
+            break;
+        default:
+            assert(true);
+            return false;
+        };
+        
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.control_vol_framework, f);
+        transaction.commit();
+        m_CurrFragmentIndex = pos;
+        
+        return true;
     }
 
 }

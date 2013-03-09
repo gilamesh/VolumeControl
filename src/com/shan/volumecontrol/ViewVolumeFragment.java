@@ -46,7 +46,7 @@ public class ViewVolumeFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle saved_instance)
     {
-        View        root_view = inflater.inflate(R.layout.view_volume, container, false);
+        View        root_view = inflater.inflate(R.layout.view_volume_fragment, container, false);
         View        view;
         TextView    title;
         ImageView   icon;

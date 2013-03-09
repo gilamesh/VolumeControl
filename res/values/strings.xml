@@ -6,17 +6,14 @@
     <string name="vol_view">View Volume</string>
     <string name="headset_text">HEADSET VOLUME</string>
     <string name="speaker_text">SPEAKER VOLUME</string>
-    <string name="menu_set_all_stream">ALL STREAMS</string>
-    <string name="menu_set_media_stream">MEDIA ONLY</string>
-    <string name="media_text">MEDIA</string>
-    <string name="all_text">ALL</string>
+    <string name="set_all_stream">SET MULTIPLE STREAMS</string>
+    <string name="set_media_stream">SET MEDIA STREAM</string>
+
     <string name="vol_view_media">MEDIA</string>
     <string name="vol_view_ringer">RINGER</string>
     <string name="vol_view_alarm">ALARM</string>
     <string name="vol_view_alert">NOTIFICATION</string>
-    <string name="vol_view_voice">VOICE</string>
-    <string name="vol_view_system">SYSTEM</string>
-    <string name="vol_ctrl_stream_title">SELECTED AUDIO STREAMS</string>
+
     
     <color name="holo_light_blue">#FF33B5E5</color>
     <color name="light_grey">#DDD</color>

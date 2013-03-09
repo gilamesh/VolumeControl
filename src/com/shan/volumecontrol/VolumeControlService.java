@@ -15,20 +15,20 @@ import android.util.Log;
 public class VolumeControlService extends Service
 {
     private static final String TAG = VolumeControlService.class.getSimpleName();
-    private VolumeControlReceiver m_VolReceiver = null;
-    private int           m_CurrHeadSetVol = 5;
-    private int           m_CurrSpeakerVol = 5;
-    private boolean       m_IsSetAllStream = false; 
-    private VolumeManager m_VolMgr; 
-    private static final int[] m_AllOtherStream = 
+    public static final String  IS_VOLSERVICE_RUNNING = "volume_ctrl_service";
+    public static final String VOL_CTRL_TAG = TAG;
+    
+    private VolumeControlReceiver   m_VolReceiver = null;
+    private int                     m_CurrHeadSetVol = 5;
+    private int                     m_CurrSpeakerVol = 5;
+    private boolean                 m_IsSetAllStream = false; 
+    private VolumeManager           m_VolMgr; 
+    private static final int[]      m_AllOtherStream = 
                                     {
                                         AudioManager.STREAM_ALARM, 
                                         AudioManager.STREAM_NOTIFICATION, 
                                         AudioManager.STREAM_RING
                                     };
-    
-    
-    
     
     @SuppressWarnings("deprecation")
     @Override
@@ -48,7 +48,7 @@ public class VolumeControlService extends Service
                                 m_CurrSpeakerVol
                             );
         
-        m_IsSetAllStream = intent.getBooleanExtra
+        m_IsSetAllStream = intent. getBooleanExtra
                         (
                             SetVolumeFragment.IS_SET_ALL_STREAM, 
                             m_IsSetAllStream
@@ -82,16 +82,6 @@ public class VolumeControlService extends Service
         
     }
 
-    
-    
-    @Override
-    public void onTaskRemoved(Intent rootIntent)
-    {
-        super.onTaskRemoved(rootIntent);
-    }
-
-
-
     @Override
     public void onCreate()
     {
@@ -100,6 +90,24 @@ public class VolumeControlService extends Service
         IntentFilter receive_filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
         m_VolReceiver = new VolumeControlReceiver();
         registerReceiver(m_VolReceiver, receive_filter);
+
+        
+        //set service to rerun if phone goes into reboot
+        SharedPreferences.Editor pref_ed = 
+                getSharedPreferences
+                (
+                    VOL_CTRL_TAG, 
+                    Context.MODE_PRIVATE
+                ).edit();
+
+        pref_ed.putBoolean(IS_VOLSERVICE_RUNNING, true); 
+        pref_ed.commit();
+        
+        
+        SharedPreferences p = getSharedPreferences(VOL_CTRL_TAG, Context.MODE_PRIVATE);
+        boolean b = p.getBoolean(IS_VOLSERVICE_RUNNING, false);
+        Log.d(TAG, "shared pref is set upon create: " + Boolean.toString(b));        
+        
     }
 
 
@@ -107,15 +115,37 @@ public class VolumeControlService extends Service
     @Override
     public IBinder onBind(Intent arg0)
     {
-        // TODO Auto-generated method stub
         return null;
     }
 
+    
+    
+    
+    
     @Override
     public void onDestroy()
     {
         if (null != m_VolReceiver)
             unregisterReceiver(m_VolReceiver);
+        
+        //do not rerun this service if phone goes into reboot
+        SharedPreferences.Editor pref_ed = 
+                                    getSharedPreferences
+                                    (
+                                        VOL_CTRL_TAG, 
+                                        Context.MODE_PRIVATE
+                                    ).edit();
+        
+        pref_ed.putBoolean(IS_VOLSERVICE_RUNNING, false);
+        pref_ed.commit();
+        
+        
+        SharedPreferences p = getSharedPreferences(VOL_CTRL_TAG, Context.MODE_PRIVATE);
+        boolean b = p.getBoolean(IS_VOLSERVICE_RUNNING, false);
+        Log.d(TAG, "shared pref is set upon destroy: " + Boolean.toString(b));
+        
+        
+        
         Log.d(TAG, "ServiceonDestroy");
         super.onDestroy();
     }
@@ -178,13 +208,8 @@ public class VolumeControlService extends Service
         {
             int headset_state =  intent.getIntExtra("state", -1);
 
-            
-            //Log.d(TAG, "headset state: " + Integer.toString(headset_state));
             if (headset_state == -1)
-            {
-                Log.d(TAG, "Unknown headset state " + Integer.toString(headset_state));
                 return;
-            }
             
             boolean is_headset_on = (HEADSET_PLUG == headset_state) 
                                     ?

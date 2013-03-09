@@ -1,6 +1,7 @@
 package com.shan.volumecontrol;
 
 import com.shan.volumecontrol.R;
+import com.shan.volumecontrol.R.id;
 
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -11,24 +12,26 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff.Mode;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Switch;
+import android.widget.TextView;
 
 public class SetVolumeFragment 
-extends     Fragment 
-implements  OnSeekBarChangeListener, 
-            OnClickListener
+extends 
+    Fragment 
+implements 
+    OnSeekBarChangeListener, 
+    OnClickListener, 
+    OnCheckedChangeListener
 {
     private static final String TAG = SetVolumeFragment.class.getSimpleName(); 
     private static final String VOL_CTRL_SERVICE = VolumeControlService.class.getName();
@@ -40,28 +43,18 @@ implements  OnSeekBarChangeListener,
     
     private SeekBar     m_HeadSetSeek, m_SpeakerSeek;
     private Switch      m_Switch;
-    private ImageView   m_MediaIcon, m_PhoneIcon, m_AlertIcon, m_AlarmIcon;
+    private TextView    m_CurrentStreamMsg;
     private int         m_HeadSetVol, m_SpeakerVol;
-    private int         m_OnColour, m_OffColour;
     private boolean     m_IsOn; 
     private boolean     m_IsSetAllStream; 
     private int         m_MenuTextId;
     private VolumeManager m_VolMgr = null;
     private AudioManager m_AudioMgr;
+    private CheckBox    m_SelectStream;
 
     @Override
     public void onCreate(Bundle bundle)
     {
-        // workaround for menu text - opPrepareOptionMenu is called first 
-        // before onActivityCreated(), hence we need to set the menu id here
-        // first
-        m_MenuTextId = (m_IsSetAllStream) 
-                        ? 
-                        R.string.menu_set_all_stream 
-                        : 
-                        R.string.menu_set_media_stream;
-        setHasOptionsMenu(true);
-        
         m_AudioMgr = (AudioManager)getActivity().
                     getSystemService(Context.AUDIO_SERVICE);
 
@@ -81,25 +74,21 @@ implements  OnSeekBarChangeListener,
     {
         Log.d(TAG, "onCreateView");
         View view = 
-                inflater.inflate(R.layout.activity_set_volume, container, false);
+                inflater.inflate(R.layout.set_volume_fragment, container, false);
         
         m_Switch        = (Switch)view.findViewById(R.id.switch_on);
         m_HeadSetSeek   = (SeekBar)view.findViewById(R.id.headset_control);
         m_SpeakerSeek   = (SeekBar)view.findViewById(R.id.speaker_control);
+        m_SelectStream = (CheckBox)view.findViewById(R.id.select_stream);
+        m_CurrentStreamMsg = (TextView)view.findViewById(R.id.current_stream);
                        
         m_HeadSetSeek.setOnSeekBarChangeListener(this);
         m_SpeakerSeek.setOnSeekBarChangeListener(this);
-        m_Switch.setOnClickListener(this);
-
-        m_MediaIcon = (ImageView)view.findViewById(R.id.media_icon);
-        m_PhoneIcon = (ImageView)view.findViewById(R.id.phone_icon);
-        m_AlarmIcon = (ImageView)view.findViewById(R.id.alarm_icon);
-        m_AlertIcon = (ImageView)view.findViewById(R.id.alert_icon);
         
-        m_OnColour = getResources().getColor(R.color.holo_light_blue);
-        m_OffColour = getResources().getColor(R.color.light_grey);
-        
-        
+        m_CurrentStreamMsg.setOnClickListener(this);
+        m_SelectStream.setOnCheckedChangeListener(this);
+        m_Switch.setOnCheckedChangeListener(this);
+      
         return view;
     }
 
@@ -146,37 +135,6 @@ implements  OnSeekBarChangeListener,
     }
 
 
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menu_inflater)
-    {
-        menu_inflater.inflate(R.menu.activity_set_volume, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-        case R.id.menu_set_ringer:
-        {
-            //set the opposite boolean value as we want the mew value 
-            // after the press, not before it
-            setStreamControl(!item.isChecked());
-            if (m_IsOn)
-                updateVolumes();
-            return true;
-        }
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
-    
-    @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
-        MenuItem item =  menu.findItem(R.id.menu_set_ringer); 
-        item.setTitle(m_MenuTextId);
-        item.setChecked(m_IsSetAllStream);
-    }
     
     
     @Override
@@ -298,11 +256,7 @@ implements  OnSeekBarChangeListener,
         
         if (!is_on)
         {
-            m_MediaIcon.setColorFilter(m_OffColour, Mode.MULTIPLY);
-            m_PhoneIcon.setColorFilter(m_OffColour, Mode.MULTIPLY);
-            m_AlarmIcon.setColorFilter(m_OffColour, Mode.MULTIPLY);
-            m_AlertIcon.setColorFilter(m_OffColour, Mode.MULTIPLY);
-            m_MenuTextId = R.string.menu_set_media_stream;
+            m_MenuTextId = R.string.set_media_stream;
         }
     }
     
@@ -314,29 +268,14 @@ implements  OnSeekBarChangeListener,
         
         m_MenuTextId = (m_IsSetAllStream) 
                         ?
-                        R.string.menu_set_all_stream
+                        R.string.set_all_stream
                         :
-                        R.string.menu_set_media_stream;    
+                        R.string.set_media_stream; 
         
-        if (m_IsOn)
-        {
-            if (m_IsSetAllStream)
-            {
-                m_MediaIcon.setColorFilter(m_OnColour, Mode.MULTIPLY);
-                m_PhoneIcon.setColorFilter(m_OnColour, Mode.MULTIPLY);
-                m_AlarmIcon.setColorFilter(m_OnColour, Mode.MULTIPLY);
-                m_AlertIcon.setColorFilter(m_OnColour, Mode.MULTIPLY);
-            }
-            else
-            {
-                m_MediaIcon.setColorFilter(m_OnColour, Mode.MULTIPLY);
-                m_PhoneIcon.setColorFilter(m_OffColour, Mode.MULTIPLY);
-                m_AlarmIcon.setColorFilter(m_OffColour, Mode.MULTIPLY);
-                m_AlertIcon.setColorFilter(m_OffColour, Mode.MULTIPLY);
-            }
-        }
         
-        getActivity().invalidateOptionsMenu();
+        m_SelectStream.setChecked(m_IsSetAllStream);
+        m_CurrentStreamMsg.setText(m_MenuTextId);
+
     }
     
     private void updateVolumes()
@@ -354,11 +293,38 @@ implements  OnSeekBarChangeListener,
         
         getActivity().startService(intent);
     }
-    
+
+    @Override
+    public void onCheckedChanged
+    (
+        CompoundButton  button_view, 
+        boolean         is_checked
+    )
+    {
+        switch(button_view.getId())
+        {
+        case R.id.switch_on:
+            setServiceOnOff(is_checked);
+            return;
+        case R.id.select_stream:
+           setStreamControl(is_checked);
+           if (m_IsOn)
+               updateVolumes();
+           return;
+        };
+    }
+
+
     @Override
     public void onClick(View v)
     {
-        if (v.getId() == R.id.switch_on)
-            setServiceOnOff(m_Switch.isChecked());
+        switch(v.getId())
+        {
+        case R.id.current_stream:
+            setStreamControl(!m_IsSetAllStream);
+            if (m_IsOn)
+                updateVolumes();
+            return;
+        };      
     }
 }

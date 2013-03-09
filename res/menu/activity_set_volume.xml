@@ -1,7 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
-    <item
-        android:id="@+id/menu_set_ringer"
-        android:checkable="true"
-        android:showAsAction="never"/>
-</menu>
