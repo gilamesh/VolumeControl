@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">VolumeControl</string>
-    <string name="vol_ctrl">Volume Control</string>
-    <string name="vol_view">View Volume</string>
+    <string name="app_name">Headset Volume Watcher</string>
+    <string name="vol_ctrl">Set volume</string>
+    <string name="vol_view">View volume</string>
     <string name="headset_text">HEADSET VOLUME</string>
     <string name="speaker_text">SPEAKER VOLUME</string>
-    <string name="set_all_stream">SET MULTIPLE STREAMS</string>
-    <string name="set_media_stream">SET MEDIA STREAM</string>
+    <string name="set_all_stream">SYNC MULTIPLE STREAMS</string>
+    <string name="set_media_stream">AUDIO STREAM ONLY</string>
 
-    <string name="vol_view_media">MEDIA</string>
+    <string name="vol_view_media">AUDIO</string>
     <string name="vol_view_ringer">RINGER</string>
     <string name="vol_view_alarm">ALARM</string>
     <string name="vol_view_alert">NOTIFICATION</string>
 
-    
     <color name="holo_light_blue">#FF33B5E5</color>
-    <color name="light_grey">#DDD</color>
 </resources>

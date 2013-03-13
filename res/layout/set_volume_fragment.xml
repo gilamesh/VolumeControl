@@ -37,7 +37,7 @@
 	        android:layout_alignLeft="@id/headset_text_view"
 	        android:layout_below="@id/headset_text_view"
 	        android:layout_marginRight="15dp"
-	        android:layout_marginTop="20dp" />
+	        android:layout_marginTop="15dp" />
 
 	    <TextView
 	        android:id="@+id/speaker_text_view"
@@ -45,7 +45,7 @@
 	        android:layout_height="wrap_content"
 	        android:layout_alignLeft="@id/headset_control"
 	        android:layout_below="@+id/headset_control"
-	        android:layout_marginTop="30dp"
+	        android:layout_marginTop="40dp"
 	        android:text="@string/speaker_text" />
 
 	    <SeekBar
@@ -55,7 +55,7 @@
 	        android:layout_alignLeft="@id/headset_control"
 	        android:layout_alignRight="@id/headset_control"
 	        android:layout_below="@id/speaker_text_view"
-	        android:layout_marginTop="20dp" />
+	        android:layout_marginTop="15dp" />
 	    
         <View 
             android:id="@+id/centre"

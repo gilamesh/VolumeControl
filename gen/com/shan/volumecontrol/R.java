@@ -12,7 +12,6 @@ public final class R {
     }
     public static final class color {
         public static final int holo_light_blue=0x7f050000;
-        public static final int light_grey=0x7f050001;
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
